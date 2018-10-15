@@ -1,33 +1,24 @@
 package com.demo.netty.zerocopy;
 
+import java.io.FileInputStream;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
 
 public class NewIOClient {
 
     public static void main(String[] args) throws Exception {
-        InetSocketAddress address = new InetSocketAddress(8899);
+        SocketChannel socketChannel = SocketChannel.open();
+        socketChannel.connect(new InetSocketAddress("localhost", 8899));
+        socketChannel.configureBlocking(true);
 
-        ServerSocketChannel socketChannel = ServerSocketChannel.open();
-        ServerSocket serverSocket = socketChannel.socket();
-        serverSocket.setReuseAddress(true);
-        serverSocket.bind(address);
+        String filePath = "E:\\NewFile\\LearningMaterials\\jdk-10.0.1_windows-x64_bin.exe";
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
+        FileChannel fileChannel = new FileInputStream(filePath).getChannel();
 
-        while (true) {
-            SocketChannel accept = socketChannel.accept();
-            accept.configureBlocking(true);
+        long start = System.currentTimeMillis();
+        long transferTo = fileChannel.transferTo(0, fileChannel.size(), socketChannel);
 
-            int readCount = 0;
-
-            while (-1 != readCount) {
-                readCount = accept.read(byteBuffer);
-            }
-        }
+        System.out.println("发送总字节数：" + transferTo + "，总共耗时：" + (System.currentTimeMillis() - start));
     }
 }
