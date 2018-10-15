@@ -58,7 +58,7 @@ public class NioServer {
                                 Charset charset = Charset.forName("utf-8");
                                 String receiveMessage = String.valueOf(charset.decode(byteBuffer).array());
 
-                                System.out.println(client + " : " + receiveMessage);
+                                System.out.println("Server receive ==> " + client + " : " + receiveMessage);
 
                                 String senderKey = null;
 
@@ -74,7 +74,7 @@ public class NioServer {
 
                                     ByteBuffer writeBuffer = ByteBuffer.allocate(1024);
 
-                                    writeBuffer.put((senderKey + " : " + receiveMessage).getBytes());
+                                    writeBuffer.put(("Server push => " + senderKey + " : " + receiveMessage).getBytes());
                                     writeBuffer.flip();
 
                                     value.write(writeBuffer);

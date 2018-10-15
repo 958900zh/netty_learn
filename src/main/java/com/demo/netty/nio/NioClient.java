@@ -37,7 +37,7 @@ public class NioClient {
 
                             ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
 
-                            byteBuffer.put((LocalDateTime.now() + " : 连接成功").getBytes());
+                            byteBuffer.put(("client push => " + LocalDateTime.now() + " : 连接成功").getBytes());
                             byteBuffer.flip();
                             client.write(byteBuffer);
 
